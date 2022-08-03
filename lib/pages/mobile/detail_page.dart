@@ -16,6 +16,7 @@ import 'package:share_plus/share_plus.dart';
 class DetailPage extends StatefulWidget {
   final int crossAxisCount;
   final model.Image image;
+
   const DetailPage({Key? key, required this.image, this.crossAxisCount = 2}) : super(key: key);
 
   @override
@@ -36,7 +37,7 @@ class _DetailPageState extends State<DetailPage> {
   }
 
   int get limit {
-    return widget.crossAxisCount * 15 >= 100 ? 90 : widget.crossAxisCount * 15;
+    return widget.crossAxisCount * 15>=100 ? 90 : widget.crossAxisCount*15;
   }
 
   void _convertData() {
@@ -105,6 +106,7 @@ class _DetailPageState extends State<DetailPage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
 
       extendBody: true,
@@ -125,147 +127,141 @@ class _DetailPageState extends State<DetailPage> {
         child: Column(
           children: [
 
-            Column(
-              children: [
-                // #image
-                Container(
-                  clipBehavior: Clip.antiAlias,
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+            // #image
+            Container(
+              clipBehavior: Clip.antiAlias,
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+              ),
+              foregroundDecoration: BoxDecoration(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.center,
+                      colors: [
+                        Colors.black.withOpacity(0.9),
+                        Colors.black.withOpacity(0.6),
+                        Colors.black.withOpacity(0.2),
+                        Colors.black.withOpacity(0.1),
+                      ]
+                  )
+              ),
+              child: AspectRatio(
+                aspectRatio: ratio,
+                child: CachedNetworkImage(
+                  fit: BoxFit.cover,
+                  imageUrl: image.url!,
+                  placeholder: (context, url) => Container(
+                    color: Colors.primaries[Random().nextInt(18) % 18],
                   ),
-                  foregroundDecoration: BoxDecoration(
-                      borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
-                      gradient: LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.center,
-                          colors: [
-                            Colors.black.withOpacity(0.9),
-                            Colors.black.withOpacity(0.6),
-                            Colors.black.withOpacity(0.2),
-                            Colors.black.withOpacity(0.1),
-                          ]
-                      )
-                  ),
-                  child: AspectRatio(
-                    aspectRatio: ratio,
-                    child: CachedNetworkImage(
-                      fit: BoxFit.cover,
-                      imageUrl: image.url!,
-                      placeholder: (context, url) => Container(
-                        color: Colors.primaries[Random().nextInt(18) % 18],
-                      ),
-                      errorWidget: (context, url, error) => const Icon(Icons.error),
-                    ),
-                  ),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
-
-                // #footer
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-
-                      // #vote and #channel
-                      ListTile(
-                        leading: const CircleAvatar(
-                          radius: 25,
-                          backgroundColor: Colors.pink,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                        title: const Text("My Dogs"),
-                        trailing: IconButton(
-                          icon: vote == 0
-                              ? const Icon(Icons.thumb_up_alt_outlined, size: 30,)
-                              : const Icon(Icons.thumb_up_alt, color: Colors.red, size: 30,),
-                          onPressed: pressVote,
-                        ),
-                      ),
-                      const SizedBox(height: 10,),
-
-                      // #title
-                      Visibility(
-                        visible: title.isNotEmpty,
-                        child: Text(title, style: const TextStyle(
-                            fontSize: 25,
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold
-                        ),),
-                      ),
-                      const SizedBox(height: 10,),
-
-                      // #subtitle
-                      Visibility(
-                        visible: subTitle.isNotEmpty,
-                        child: Text(subTitle, style: const TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500
-                        ),),
-                      ),
-                      const SizedBox(height: 10,),
-
-                      Row(
-                        children: [
-                          const Expanded(
-                            flex: 1,
-                            child: SizedBox.shrink(),
-                          ),
-
-                          // #favorite
-                          Expanded(
-                            flex: 2,
-                            child: ElevatedButton(
-                              onPressed: _setWallpaper,
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                primary: const Color.fromRGBO(239, 239, 239, 1),
-                                shape: const StadiumBorder(),
-                                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-                              ),
-                              child: const Text("Favorite", style: TextStyle(color: Colors.black, fontSize: 17.5, fontWeight: FontWeight.w600),),
-                            ),
-                          ),
-                          const SizedBox(width: 15,),
-
-                          // #save
-                          Expanded(
-                            flex: 2,
-                            child: ElevatedButton(
-                              onPressed: _save,
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0,
-                                primary: Colors.red,
-                                shape: const StadiumBorder(),
-                                padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
-                              ),
-                              child: const Text("Save", style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.w600),),
-                            ),
-                          ),
-
-                          // #share
-                          Expanded(
-                            flex: 1,
-                            child: IconButton(
-                              icon: const Icon(Icons.share, size: 30,),
-                              onPressed: _share,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 20,)
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
 
+            // #footer
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+
+                  // #vote and #channel
+                  ListTile(
+                    leading: const CircleAvatar(
+                      radius: 25,
+                      backgroundColor: Colors.pink,
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                    title: const Text("My Dogs"),
+                    trailing: IconButton(
+                      icon: vote == 0
+                          ? const Icon(Icons.thumb_up_alt_outlined, size: 30,)
+                          : const Icon(Icons.thumb_up_alt, color: Colors.red, size: 30,),
+                      onPressed: pressVote,
+                    ),
+                  ),
+                  const SizedBox(height: 10,),
+
+                  // #title
+                  Visibility(
+                    visible: title.isNotEmpty,
+                    child: Text(title, style: const TextStyle(
+                        fontSize: 25,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold
+                    ),),
+                  ),
+                  const SizedBox(height: 10,),
+
+                  // #subtitle
+                  Visibility(
+                    visible: subTitle.isNotEmpty,
+                    child: Text(subTitle, style: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500
+                    ),),
+                  ),
+                  const SizedBox(height: 10,),
+                  Row(
+                    children: [
+                      const Expanded(
+                        flex: 1,
+                        child: SizedBox.shrink(),
+                      ),
+
+                      // #favorite
+                      Expanded(
+                        flex: 2,
+                        child: ElevatedButton(
+                          onPressed: _setWallpaper,
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            primary: const Color.fromRGBO(239, 239, 239, 1),
+                            shape: const StadiumBorder(),
+                            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                          ),
+                          child: const Text("Favorite", style: TextStyle(color: Colors.black, fontSize: 17.5, fontWeight: FontWeight.w600),),
+                        ),
+                      ),
+                      const SizedBox(width: 15,),
+
+                      // #save
+                      Expanded(
+                        flex: 2,
+                        child: ElevatedButton(
+                          onPressed: _save,
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            primary: Colors.red,
+                            shape: const StadiumBorder(),
+                            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+                          ),
+                          child: const Text("Save", style: TextStyle(fontSize: 17.5, fontWeight: FontWeight.w600),),
+                        ),
+                      ),
+
+                      // #share
+                      Expanded(
+                        flex: 1,
+                        child: IconButton(
+                          icon: const Icon(Icons.share, size: 30,),
+                          onPressed: _share,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20,)
+                ],
+              ),
+            ),
             const SizedBox(height: 2,),
 
             // #similary
